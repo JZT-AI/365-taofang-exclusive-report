@@ -252,7 +252,6 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
   <header class="hero">
     <div class="hero-top"><button class="return-button" type="button" aria-label="返回" hidden></button></div>
     <h1 id="report-title"></h1>
-    <p class="author" hidden></p>
   </header>
   <main id="report-content" class="content"></main>
 </div>
@@ -568,12 +567,6 @@ ReportPrototype.onAvailabilityChange(() => {
 const reportTitle = params.get('title')?.trim() || (fromReport ? '专属报告' : '西安三房看房参考');
 document.getElementById('report-title').textContent = reportTitle;
 document.title = reportTitle;
-const author = params.get('agent')?.trim() || (fromReport ? '' : '张顾问');
-if (author) {
-  const byline = document.querySelector('.author');
-  byline.textContent = author + '为您整理';
-  byline.hidden = false;
-}
 const returnButton = document.querySelector('.return-button');
 if (window.opener || (document.referrer && history.length > 1)) {
   returnButton.hidden = false;
