@@ -237,6 +237,10 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
 .viewer[open] { display: grid; place-items: center; }
 .viewer-content { text-align: center; }
 .viewer-content img, .viewer-content video { display: block; max-width: 100%; max-height: 79vh; border-radius: 8px; }
+.viewer-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;width:min(100%,480px);margin:14px auto 0;color:#fff;font-size:13px}
+.viewer-nav button{min-width:58px;min-height:38px;border:1px solid #ffffff70;border-radius:20px;background:#ffffff1f;color:#fff;font-size:12px}
+.viewer-nav button:disabled{opacity:.35}
+.viewer-hint{position:absolute;left:0;right:0;bottom:24px;text-align:center;color:#ffffffa8;font-size:12px}
 .viewer-close {
   position: absolute;
   top: max(16px, env(safe-area-inset-top));
@@ -267,6 +271,8 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
 <dialog id="viewer" class="viewer" aria-label="查看素材">
   <button class="viewer-close" type="button" aria-label="关闭">×</button>
   <div class="viewer-content"></div>
+  <div class="viewer-nav"><button id="viewer-prev" type="button">上一条</button><span id="viewer-count"></span><button id="viewer-next" type="button">下一条</button></div>
+  <div id="viewer-hint" class="viewer-hint"></div>
 </dialog>
 <script src="../report-shared.js"></script>
 <script>
@@ -466,6 +472,7 @@ function addRecommendations(floor, kind, items) {
 const viewer = document.getElementById('viewer');
 const viewerContent = viewer.querySelector('.viewer-content');
 let openedAssetRef;
+let viewerItems = [], viewerIndex = 0, viewerKind = '图片';
 viewer.querySelector('.viewer-close').addEventListener('click', () => viewer.close());
 viewer.addEventListener('click', event => { if (event.target === viewer) viewer.close(); });
 viewer.addEventListener('close', () => {
@@ -473,8 +480,29 @@ viewer.addEventListener('close', () => {
   viewerContent.replaceChildren();
 });
 
-function openMedia(kind, item) {
+function stepViewer(delta) {
+  const next=viewerIndex+delta;
+  if(next<0||next>=viewerItems.length)return;
+  viewerIndex=next;
+  showViewerItem();
+}
+document.getElementById('viewer-prev').addEventListener('click',()=>stepViewer(-1));
+document.getElementById('viewer-next').addEventListener('click',()=>stepViewer(1));
+let viewerTouchStart=null;
+viewer.addEventListener('touchstart',event=>{viewerTouchStart={x:event.changedTouches[0].clientX,y:event.changedTouches[0].clientY}},{passive:true});
+viewer.addEventListener('touchend',event=>{if(!viewerTouchStart)return;const dx=event.changedTouches[0].clientX-viewerTouchStart.x,dy=event.changedTouches[0].clientY-viewerTouchStart.y;const delta=viewerKind==='图片'?dx:dy;if(Math.abs(delta)>45)stepViewer(delta<0?1:-1);viewerTouchStart=null},{passive:true});
+viewer.addEventListener('keydown',event=>{if(viewerKind==='图片'&&['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();stepViewer(event.key==='ArrowRight'?1:-1)}if(viewerKind==='视频'&&['ArrowUp','ArrowDown'].includes(event.key)){event.preventDefault();stepViewer(event.key==='ArrowDown'?1:-1)}});
+function openMedia(kind, item, items) {
   if (ReportPrototype.isDisabled(item.assetRef)) return;
+  viewerKind=kind;
+  viewerItems=items.filter(value=>!ReportPrototype.isDisabled(value.assetRef));
+  viewerIndex=Math.max(0,viewerItems.indexOf(item));
+  if(!viewer.open)viewer.showModal();
+  showViewerItem();
+}
+function showViewerItem(){
+  const item=viewerItems[viewerIndex],kind=viewerKind;
+  if(!item)return;
   openedAssetRef = item.assetRef;
   const url = fileUrl(item.cover);
   const isVideo = kind === '视频';
@@ -483,7 +511,6 @@ function openMedia(kind, item) {
     viewerContent.textContent = isVideo ? '视频暂时无法播放，请稍后再试' : '照片暂时无法查看，请稍后再试';
   }
   content.addEventListener('error', showError, { once: true });
-  viewer.showModal();
   if (isVideo) {
     content.controls = true;
     content.autoplay = true;
@@ -496,9 +523,13 @@ function openMedia(kind, item) {
     content.src = url;
   }
   viewerContent.replaceChildren(content);
+  document.getElementById('viewer-count').textContent=(viewerIndex+1)+' / '+viewerItems.length;
+  document.getElementById('viewer-prev').disabled=viewerIndex===0;
+  document.getElementById('viewer-next').disabled=viewerIndex===viewerItems.length-1;
+  document.getElementById('viewer-hint').textContent=viewerItems.length>1?(isVideo?'上下滑动查看其他视频':'左右滑动查看其他照片'):'';
 }
 
-function mediaTile(kind, item) {
+function mediaTile(kind, item, items) {
   const isVideo = kind === '视频';
   const button = node('button', 'media-card');
   button.type = 'button';
@@ -506,20 +537,20 @@ function mediaTile(kind, item) {
   const cover = buildCover(item, kind);
   if (isVideo) cover.append(node('span', 'play'));
   button.append(cover);
-  button.addEventListener('click', () => openMedia(kind, item));
+  button.addEventListener('click', () => openMedia(kind, item, items));
   return button;
 }
 
 function addMediaFloor(floor, kind, items) {
   const initialCount = kind === '图片' ? 2 : 1;
   const initial = node('div', 'media-grid');
-  initial.append(...items.slice(0, initialCount).map(item => mediaTile(kind, item)));
+  initial.append(...items.slice(0, initialCount).map(item => mediaTile(kind, item, items)));
   floor.append(initial);
   if (items.length <= initialCount) return;
   const extra = node('div', 'media-grid more-recommendations');
   extra.id = floor.id + '-more';
   extra.hidden = true;
-  extra.append(...items.slice(initialCount).map(item => mediaTile(kind, item)));
+  extra.append(...items.slice(initialCount).map(item => mediaTile(kind, item, items)));
   const label = kind === '图片' ? '照片' : '视频';
   const toggle = node('button', 'more-button', '查看全部' + label + '（' + items.length + '）');
   toggle.type = 'button';
