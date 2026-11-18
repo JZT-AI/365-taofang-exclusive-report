@@ -271,6 +271,7 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
 <script src="../report-shared.js"></script>
 <script>
 const params = new URLSearchParams(location.search);
+if(params.get('disabled')==='1'){document.getElementById('report-content').innerHTML='<p class="page-error">该报告暂不可查看</p>';document.getElementById('report-title').textContent='报告暂不可查看';document.querySelector('.hero-house-summary')?.remove();document.querySelector('#report-advisor')?.remove();document.body.dataset.snapshotDisabled='1'}
 const floors = {
   房源: { id: 'houses', title: '房源推荐' },
   图片: { id: 'images', title: '实景照片' },
@@ -535,6 +536,7 @@ function addMediaFloor(floor, kind, items) {
 }
 
 function renderFloor(kind) {
+  if(document.body.dataset.snapshotDisabled==='1')return;
   const media = kind === '图片' || kind === '视频';
   const items = sampleReport ? sampleReport.items[kind] || [] : fromReport
     ? (Array.isArray(titles[kind]) ? titles[kind] : []).map((title, index) => ({
@@ -575,7 +577,7 @@ function renderEmptyState() {
   main.querySelector('.page-error')?.remove();
   if (!main.childElementCount) main.append(node('p', 'page-error', '这份报告暂时没有可查看的内容'));
 }
-for (const kind of reportOrder) renderFloor(kind);
+if(document.body.dataset.snapshotDisabled!=='1') for (const kind of reportOrder) renderFloor(kind);
 renderEmptyState();
 ReportPrototype.onAvailabilityChange(() => {
   if (viewer.open && ReportPrototype.isDisabled(openedAssetRef)) {
