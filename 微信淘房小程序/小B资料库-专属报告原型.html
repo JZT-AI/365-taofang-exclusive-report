@@ -289,8 +289,9 @@ const demoDescriptions = {
   房源: '按您关注的户型，整理了几套不同面积和总价的备选。',
 };
 const sampleReports = {
-  R001: { title: '周末看房实景资料', order: ['图片', '视频'], items: { 图片: demo.图片.slice(0, 2), 视频: demo.视频.slice(0, 1) }, descriptions: { 图片: '整理了看房当天拍摄的室内与小区照片。' } },
-  R002: { title: '西安三房看房参考', order: ['房源', '图片'], items: { 房源: demo.房源.slice(0, 2), 图片: demo.图片.slice(0, 1) }, descriptions: demoDescriptions }
+  R001: { title: '周末看房实景照片', order: ['图片'], items: { 图片: demo.图片.slice(0, 2) }, descriptions: { 图片: '整理了看房当天拍摄的室内与周边照片。' } },
+  R002: { title: '西安三房看房参考', order: ['房源', '图片', '视频'], items: { 房源: demo.房源.slice(0, 2), 图片: demo.图片.slice(0, 2), 视频: demo.视频.slice(0, 1) }, descriptions: demoDescriptions },
+  R003: { title: '周末现场讲解视频', order: ['视频'], items: { 视频: demo.视频.slice(0, 2) }, descriptions: { 视频: '两段现场实拍，方便您先了解空间与周边。' } }
 };
 const sampleReport = sampleReports[params.get('sample')];
 const fromReport = ['items', 'covers', 'details', 'descs'].some(key => params.has(key));
