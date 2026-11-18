@@ -307,6 +307,7 @@ function readObject(key) {
 }
 
 const titles = readObject('items');
+const moduleTitles = readObject('moduleTitles');
 const covers = readObject('covers');
 const details = readObject('details');
 const descriptions = fromReport ? readObject('descs') : demoDescriptions;
@@ -530,7 +531,7 @@ function renderFloor(kind) {
 
   const floor = node('section', 'floor');
   floor.id = floors[kind].id;
-  floor.append(node('h2', 'floor-title', floors[kind].title));
+  floor.append(node('h2', 'floor-title', typeof moduleTitles[kind] === 'string' && moduleTitles[kind].trim() ? moduleTitles[kind].trim() : floors[kind].title));
   if (description) floor.append(node('p', 'floor-desc', description));
   if (visibleItems.length) {
     if (!media) {
