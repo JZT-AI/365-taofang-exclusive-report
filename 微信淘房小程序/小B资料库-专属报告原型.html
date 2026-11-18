@@ -296,8 +296,13 @@ const demoDescriptions = {
   房源: '按您关注的户型，整理了几套不同面积和总价的备选。',
   小区: '如果您也在比较居住位置，可以先看看这几个小区所在的板块。'
 };
+const sampleReports = {
+  R001: { title: '周末看房实景资料', order: ['图片', '视频'], items: { 图片: demo.图片.slice(0, 2), 视频: demo.视频.slice(0, 1) }, descriptions: { 图片: '整理了看房当天拍摄的室内与小区照片。' } },
+  R002: { title: '西安三房看房参考', order: ['房源', '小区', '图片'], items: { 房源: demo.房源.slice(0, 2), 小区: demo.小区.slice(0, 1), 图片: demo.图片.slice(0, 1) }, descriptions: demoDescriptions }
+};
+const sampleReport = sampleReports[params.get('sample')];
 const fromReport = ['items', 'covers', 'details', 'descs'].some(key => params.has(key));
-const reportOrder = params.has('components')
+const reportOrder = sampleReport ? sampleReport.order : params.has('components')
   ? [...new Set(params.get('components').split(',').filter(kind => Object.hasOwn(floors, kind)))]
   : Object.keys(floors);
 
@@ -310,7 +315,7 @@ const titles = readObject('items');
 const moduleTitles = readObject('moduleTitles');
 const covers = readObject('covers');
 const details = readObject('details');
-const descriptions = fromReport ? readObject('descs') : demoDescriptions;
+const descriptions = sampleReport ? sampleReport.descriptions : fromReport ? readObject('descs') : demoDescriptions;
 const main = document.getElementById('report-content');
 
 function node(tag, className, text) {
@@ -513,7 +518,7 @@ function addMediaFloor(floor, kind, items) {
 
 function renderFloor(kind) {
   const media = kind === '图片' || kind === '视频';
-  const items = fromReport
+  const items = sampleReport ? sampleReport.items[kind] || [] : fromReport
     ? (Array.isArray(titles[kind]) ? titles[kind] : []).map((title, index) => ({
         ...(details[kind]?.[index] || {}),
         title: String(title),
@@ -565,7 +570,7 @@ ReportPrototype.onAvailabilityChange(() => {
   renderEmptyState();
 });
 
-const reportTitle = params.get('title')?.trim() || (fromReport ? '专属报告' : '西安三房看房参考');
+const reportTitle = sampleReport?.title || params.get('title')?.trim() || (fromReport ? '专属报告' : '西安三房看房参考');
 document.getElementById('report-title').textContent = reportTitle;
 document.title = reportTitle;
 const returnButton = document.querySelector('.return-button');
