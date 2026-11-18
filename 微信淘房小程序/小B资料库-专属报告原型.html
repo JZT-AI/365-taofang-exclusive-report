@@ -289,6 +289,8 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
 <script>
 const params = new URLSearchParams(location.search);
 if(params.get('disabled')==='1')document.body.dataset.snapshotDisabled='1';
+const disabledAssetRefs=new Set((params.get('disabledAssets')||'').split(',').filter(Boolean));
+const isMediaDisabled=ref=>!!ref&&(disabledAssetRefs.has(ref)||ReportPrototype.isDisabled(ref));
 const floors = {
   房源: { id: 'houses', title: '房源推荐' },
   图片: { id: 'images', title: '实景照片' },
@@ -504,9 +506,9 @@ viewer.addEventListener('touchstart',event=>{viewerTouchStart={x:event.changedTo
 viewer.addEventListener('touchend',event=>{if(!viewerTouchStart)return;const dx=event.changedTouches[0].clientX-viewerTouchStart.x,dy=event.changedTouches[0].clientY-viewerTouchStart.y;const delta=viewerKind==='图片'?dx:dy;if(Math.abs(delta)>45)stepViewer(delta<0?1:-1);viewerTouchStart=null},{passive:true});
 viewer.addEventListener('keydown',event=>{if(viewerKind==='图片'&&['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();stepViewer(event.key==='ArrowRight'?1:-1)}if(viewerKind==='视频'&&['ArrowUp','ArrowDown'].includes(event.key)){event.preventDefault();stepViewer(event.key==='ArrowDown'?1:-1)}});
 function openMedia(kind, item, items) {
-  if (ReportPrototype.isDisabled(item.assetRef)) return;
+  if (isMediaDisabled(item.assetRef)) return;
   viewerKind=kind;
-  viewerItems=items.filter(value=>!ReportPrototype.isDisabled(value.assetRef));
+  viewerItems=items.filter(value=>!isMediaDisabled(value.assetRef));
   viewerIndex=Math.max(0,viewerItems.indexOf(item));
   if(!viewer.open)viewer.showModal();
   showViewerItem();
@@ -588,7 +590,7 @@ function renderFloor(kind) {
         assetRef: media ? details[kind]?.[index]?.assetRef || ReportPrototype.referenceForName(String(title)) : undefined
       }))
     : demo[kind];
-  const visibleItems = media ? items.filter(item => !ReportPrototype.isDisabled(item.assetRef)) : items;
+  const visibleItems = media ? items.filter(item => !isMediaDisabled(item.assetRef)) : items;
   const description = typeof descriptions[kind] === 'string' ? descriptions[kind].trim() : '';
   const existing = document.getElementById(floors[kind].id);
   if (!visibleItems.length && !description) {
@@ -622,7 +624,7 @@ function renderEmptyState() {
 if(document.body.dataset.snapshotDisabled!=='1') for (const kind of reportOrder) renderFloor(kind);
 renderEmptyState();
 ReportPrototype.onAvailabilityChange(() => {
-  if (viewer.open && ReportPrototype.isDisabled(openedAssetRef)) {
+  if (viewer.open && isMediaDisabled(openedAssetRef)) {
     viewerContent.replaceChildren();
     viewer.close();
   }
