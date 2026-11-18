@@ -264,7 +264,6 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
 const params = new URLSearchParams(location.search);
 const floors = {
   房源: { id: 'houses', title: '房源推荐' },
-  小区: { id: 'communities', title: '小区推荐' },
   图片: { id: 'images', title: '实景照片' },
   视频: { id: 'videos', title: '实拍视频' }
 };
@@ -275,12 +274,6 @@ const demo = {
     { ...ReportPrototype.houseExamples['101139343423'], title: '金地湖城大境 · 四室', cover: 'thumb-video.jpg', room: 4, area: 136, price: 218, community: '金地湖城大境', district: '雁塔区', block: '曲江' },
     { ...ReportPrototype.houseExamples.S8624826410476521, title: '龙湖香醍国际 · 三室', cover: 'thumb-community.jpg', room: 3, area: 128, price: 188, community: '龙湖香醍国际', district: '灞桥区', block: '浐灞' }
   ],
-  小区: [
-    { title: '御锦城', cover: 'thumb-community.jpg', district: '浐灞国际港', block: '浐河西路' },
-    { title: '天朗大兴郡', cover: 'thumb-skyline.jpg', district: '莲湖区', block: '大兴新城' },
-    { title: '保利心语花园', cover: 'thumb-video.jpg', district: '雁塔区', block: '曲江' },
-    { title: '龙湖香醍国际', cover: 'thumb-community.jpg', district: '灞桥区', block: '浐灞' }
-  ].map(item => ({ ...ReportPrototype.communityExamples[item.title], ...item })),
   图片: [
     { title: '室内实景', cover: 'thumb-living.jpg', assetRef: 'asset-1' },
     { title: '小区环境', cover: 'thumb-community.jpg', assetRef: 'asset-5' },
@@ -294,17 +287,16 @@ const demo = {
 };
 const demoDescriptions = {
   房源: '按您关注的户型，整理了几套不同面积和总价的备选。',
-  小区: '如果您也在比较居住位置，可以先看看这几个小区所在的板块。'
 };
 const sampleReports = {
   R001: { title: '周末看房实景资料', order: ['图片', '视频'], items: { 图片: demo.图片.slice(0, 2), 视频: demo.视频.slice(0, 1) }, descriptions: { 图片: '整理了看房当天拍摄的室内与小区照片。' } },
-  R002: { title: '西安三房看房参考', order: ['房源', '小区', '图片'], items: { 房源: demo.房源.slice(0, 2), 小区: demo.小区.slice(0, 1), 图片: demo.图片.slice(0, 1) }, descriptions: demoDescriptions }
+  R002: { title: '西安三房看房参考', order: ['房源', '图片'], items: { 房源: demo.房源.slice(0, 2), 图片: demo.图片.slice(0, 1) }, descriptions: demoDescriptions }
 };
 const sampleReport = sampleReports[params.get('sample')];
 const fromReport = ['items', 'covers', 'details', 'descs'].some(key => params.has(key));
 const reportOrder = sampleReport ? sampleReport.order : params.has('components')
-  ? [...new Set(params.get('components').split(',').filter(kind => Object.hasOwn(floors, kind)))]
-  : Object.keys(floors);
+  ? [...new Set(params.get('components').split(',').filter(kind => ['房源', '图片', '视频'].includes(kind)))]
+  : ['房源', '图片', '视频'];
 
 function readObject(key) {
   try { return JSON.parse(params.get(key)) || {}; }
