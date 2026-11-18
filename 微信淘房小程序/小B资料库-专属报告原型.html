@@ -255,6 +255,7 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
   <header class="hero">
     <div class="hero-top"><button class="return-button" type="button" aria-label="返回" hidden></button></div>
     <h1 id="report-title"></h1>
+    <p id="report-advisor" class="author" hidden></p>
     <div id="hero-house-summary" class="hero-house-summary" hidden></div>
   </header>
   <main id="report-content" class="content"></main>
@@ -293,9 +294,9 @@ const demoDescriptions = {
   房源: '按您关注的户型，整理了几套不同面积和总价的备选。',
 };
 const sampleReports = {
-  R001: { title: '周末看房实景照片', order: ['图片'], items: { 图片: demo.图片.slice(0, 2) }, descriptions: { 图片: '整理了看房当天拍摄的室内与周边照片。' } },
-  R002: { title: '西安三房看房参考', order: ['房源', '图片', '视频'], items: { 房源: demo.房源.slice(0, 2), 图片: demo.图片.slice(0, 2), 视频: demo.视频.slice(0, 1) }, descriptions: demoDescriptions },
-  R003: { title: '周末现场讲解视频', order: ['视频'], items: { 视频: demo.视频.slice(0, 2) }, descriptions: { 视频: '两段现场实拍，方便您先了解空间与周边。' } }
+  R001: { title: '周末看房实景照片', advisorName:'张顾问', order: ['图片'], items: { 图片: demo.图片.slice(0, 2) }, descriptions: { 图片: '整理了看房当天拍摄的室内与周边照片。' } },
+  R002: { title: '西安三房看房参考', advisorName:'王顾问', order: ['房源', '图片', '视频'], items: { 房源: demo.房源.slice(0, 2), 图片: demo.图片.slice(0, 2), 视频: demo.视频.slice(0, 1) }, descriptions: demoDescriptions },
+  R003: { title: '周末现场讲解视频', advisorName:'张顾问', order: ['视频'], items: { 视频: demo.视频.slice(0, 2) }, descriptions: { 视频: '两段现场实拍，方便您先了解空间与周边。' } }
 };
 const sampleReport = sampleReports[params.get('sample')];
 const fromReport = ['items', 'covers', 'details', 'descs'].some(key => params.has(key));
@@ -570,6 +571,8 @@ ReportPrototype.onAvailabilityChange(() => {
 const reportTitle = sampleReport?.title || params.get('title')?.trim() || (fromReport ? '专属报告' : '西安三房看房参考');
 document.getElementById('report-title').textContent = reportTitle;
 document.title = reportTitle;
+const advisorName=sampleReport?.advisorName||params.get('advisorName')?.trim()||(!fromReport?'林悦':'');
+if(advisorName){const advisor=document.getElementById('report-advisor');advisor.textContent='安家顾问 '+advisorName+'为您整理';advisor.hidden=false}
 const heroHouses = reportOrder.includes('房源') ? sampleReport ? sampleReport.items.房源 || [] : fromReport
   ? (Array.isArray(titles.房源) ? titles.房源 : []).map((_,index)=>details.房源?.[index]||{}) : demo.房源 : [];
 if (heroHouses.length) {
