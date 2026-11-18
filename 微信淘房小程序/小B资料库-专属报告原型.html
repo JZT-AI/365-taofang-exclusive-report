@@ -79,6 +79,9 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
   line-height: 1.2;
   overflow-wrap: anywhere;
 }
+.hero-house-summary{display:grid;gap:5px;width:fit-content;max-width:100%;margin-top:18px;padding:11px 14px;border:1px solid #ffffff3d;border-radius:12px;background:#071c6480;backdrop-filter:blur(8px)}
+.hero-house-summary span{color:#e8f1ff;font-size:13px;line-height:1.45}
+.hero-house-summary strong{color:#fff;font-size:19px;line-height:1.25;letter-spacing:.01em}
 .author { margin: 12px 0 0; color: #e0eaff; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
 .content {
   position: relative;
@@ -252,6 +255,7 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
   <header class="hero">
     <div class="hero-top"><button class="return-button" type="button" aria-label="返回" hidden></button></div>
     <h1 id="report-title"></h1>
+    <div id="hero-house-summary" class="hero-house-summary" hidden></div>
   </header>
   <main id="report-content" class="content"></main>
 </div>
@@ -566,6 +570,19 @@ ReportPrototype.onAvailabilityChange(() => {
 const reportTitle = sampleReport?.title || params.get('title')?.trim() || (fromReport ? '专属报告' : '西安三房看房参考');
 document.getElementById('report-title').textContent = reportTitle;
 document.title = reportTitle;
+const heroHouses = reportOrder.includes('房源') ? sampleReport ? sampleReport.items.房源 || [] : fromReport
+  ? (Array.isArray(titles.房源) ? titles.房源 : []).map((_,index)=>details.房源?.[index]||{}) : demo.房源 : [];
+if (heroHouses.length) {
+  const format = value => new Intl.NumberFormat('zh-CN',{maximumFractionDigits:2}).format(value);
+  const range = (values,unit) => {const nums=values.map(Number).filter(value=>Number.isFinite(value)&&value>0).sort((a,b)=>a-b);return nums.length?(nums[0]===nums.at(-1)?format(nums[0]):format(nums[0])+'–'+format(nums.at(-1)))+unit:''};
+  const rooms=[...new Set(heroHouses.map(house=>Number(house.room)).filter(Boolean))].sort((a,b)=>a-b).map(room=>room+'室').join(' / ');
+  const line=[heroHouses.length+'套房源',range(heroHouses.map(house=>house.area),'㎡'),rooms].filter(Boolean).join(' · ');
+  const price=range(heroHouses.map(house=>house.price),'万');
+  const summary=document.getElementById('hero-house-summary');
+  summary.append(node('span','',line));
+  if(price)summary.append(node('strong','','总价 '+price));
+  summary.hidden=false;
+}
 const returnButton = document.querySelector('.return-button');
 if (window.opener || (document.referrer && history.length > 1)) {
   returnButton.hidden = false;
