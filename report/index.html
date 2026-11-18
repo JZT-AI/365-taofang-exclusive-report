@@ -165,6 +165,9 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
   background: #fff;
   border-radius: 12px;
 }
+.recommendation[role="link"] { cursor: pointer; }
+.recommendation[role="link"]:focus-visible { outline: 2px solid #226ef3; outline-offset: 2px; }
+.detail-toast { position: fixed; z-index: 30; left: 50%; bottom: 36px; width: max-content; max-width: calc(100% - 48px); padding: 12px 17px; border-radius: 10px; background: #1a2d47e8; color: #fff; font-size: 13px; line-height: 1.45; text-align: center; transform: translateX(-50%); box-shadow: 0 10px 30px #071c3360; }
 .cover { position: relative; overflow: hidden; background: #dde6f4; }
 .recommendation .cover { aspect-ratio: 1.08; border-radius: 7px; }
 .cover img, .cover video { display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -255,10 +258,12 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
   <header class="hero">
     <div class="hero-top"><button class="return-button" type="button" aria-label="返回" hidden></button></div>
     <h1 id="report-title"></h1>
+    <p id="report-advisor" class="author" hidden></p>
     <div id="hero-house-summary" class="hero-house-summary" hidden></div>
   </header>
   <main id="report-content" class="content"></main>
 </div>
+<div id="detail-toast" class="detail-toast" role="status" hidden></div>
 <dialog id="viewer" class="viewer" aria-label="查看素材">
   <button class="viewer-close" type="button" aria-label="关闭">×</button>
   <div class="viewer-content"></div>
@@ -273,10 +278,10 @@ const floors = {
 };
 const demo = {
   房源: [
-    { ...ReportPrototype.houseExamples['101140402577'], title: '御锦城三房 · 南北通透', cover: 'thumb-living.jpg', room: 3, area: 94.06, price: 108, community: '御锦城', district: '浐灞国际港', block: '浐河西路' },
-    { ...ReportPrototype.houseExamples.S4624826410476559, title: '保利心语花园 · 南北通透', cover: 'thumb-skyline.jpg', room: 3, area: 112, price: 156, community: '保利心语花园', district: '雁塔区', block: '曲江' },
-    { ...ReportPrototype.houseExamples['101139343423'], title: '金地湖城大境 · 四室', cover: 'thumb-video.jpg', room: 4, area: 136, price: 218, community: '金地湖城大境', district: '雁塔区', block: '曲江' },
-    { ...ReportPrototype.houseExamples.S8624826410476521, title: '龙湖香醍国际 · 三室', cover: 'thumb-community.jpg', room: 3, area: 128, price: 188, community: '龙湖香醍国际', district: '灞桥区', block: '浐灞' }
+    { ...ReportPrototype.houseExamples['101140402577'], title: '御锦城三房 · 南北通透', cover: 'thumb-living.jpg', room: 3, area: 94.06, price: 108, community: '御锦城', district: '浐灞国际港', block: '浐河西路', source: '贝壳' },
+    { ...ReportPrototype.houseExamples.S4624826410476559, title: '保利心语花园 · 南北通透', cover: 'thumb-skyline.jpg', room: 3, area: 112, price: 156, community: '保利心语花园', district: '雁塔区', block: '曲江', source: '安居客' },
+    { ...ReportPrototype.houseExamples['101139343423'], title: '金地湖城大境 · 四室', cover: 'thumb-video.jpg', room: 4, area: 136, price: 218, community: '金地湖城大境', district: '雁塔区', block: '曲江', source: '贝壳' },
+    { ...ReportPrototype.houseExamples.S8624826410476521, title: '龙湖香醍国际 · 三室', cover: 'thumb-community.jpg', room: 3, area: 128, price: 188, community: '龙湖香醍国际', district: '灞桥区', block: '浐灞', source: '安居客' }
   ],
   图片: [
     { title: '室内实景', cover: 'thumb-living.jpg', assetRef: 'asset-1' },
@@ -293,9 +298,9 @@ const demoDescriptions = {
   房源: '按您关注的户型，整理了几套不同面积和总价的备选。',
 };
 const sampleReports = {
-  R001: { title: '周末看房实景照片', order: ['图片'], items: { 图片: demo.图片.slice(0, 2) }, descriptions: { 图片: '整理了看房当天拍摄的室内与周边照片。' } },
-  R002: { title: '西安三房看房参考', order: ['房源', '图片', '视频'], items: { 房源: demo.房源.slice(0, 2), 图片: demo.图片.slice(0, 2), 视频: demo.视频.slice(0, 1) }, descriptions: demoDescriptions },
-  R003: { title: '周末现场讲解视频', order: ['视频'], items: { 视频: demo.视频.slice(0, 2) }, descriptions: { 视频: '两段现场实拍，方便您先了解空间与周边。' } }
+  R001: { title: '周末看房实景照片', advisorName:'张顾问', order: ['图片'], items: { 图片: demo.图片.slice(0, 2) }, descriptions: { 图片: '整理了看房当天拍摄的室内与周边照片。' } },
+  R002: { title: '西安三房看房参考', advisorName:'王顾问', order: ['房源', '图片', '视频'], items: { 房源: demo.房源.slice(0, 2), 图片: demo.图片.slice(0, 2), 视频: demo.视频.slice(0, 1) }, descriptions: demoDescriptions },
+  R003: { title: '周末现场讲解视频', advisorName:'张顾问', order: ['视频'], items: { 视频: demo.视频.slice(0, 2) }, descriptions: { 视频: '两段现场实拍，方便您先了解空间与周边。' } }
 };
 const sampleReport = sampleReports[params.get('sample')];
 const fromReport = ['items', 'covers', 'details', 'descs'].some(key => params.has(key));
@@ -413,6 +418,22 @@ function recommendation(kind, item) {
     addMarketPrice(copy, item);
   }
   card.append(buildCover(item, kind), copy);
+  if (isHouse) {
+    card.setAttribute('role', 'link');
+    card.tabIndex = 0;
+    card.setAttribute('aria-label', '查看' + title + '的三方房源详情');
+    const explain = () => {
+      const toast = document.getElementById('detail-toast');
+      toast.textContent = '正式产品将打开' + (item.source || '对应三方平台') + '的这套房源详情';
+      toast.hidden = false;
+      clearTimeout(explain.timer);
+      explain.timer = setTimeout(() => { toast.hidden = true; }, 2600);
+    };
+    card.addEventListener('click', explain);
+    card.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); explain(); }
+    });
+  }
   return card;
 }
 
@@ -570,6 +591,8 @@ ReportPrototype.onAvailabilityChange(() => {
 const reportTitle = sampleReport?.title || params.get('title')?.trim() || (fromReport ? '专属报告' : '西安三房看房参考');
 document.getElementById('report-title').textContent = reportTitle;
 document.title = reportTitle;
+const advisorName=sampleReport?.advisorName||params.get('advisorName')?.trim()||(!fromReport?'林悦':'');
+if(advisorName){const advisor=document.getElementById('report-advisor');advisor.textContent='安家顾问 '+advisorName+'为您整理';advisor.hidden=false}
 const heroHouses = reportOrder.includes('房源') ? sampleReport ? sampleReport.items.房源 || [] : fromReport
   ? (Array.isArray(titles.房源) ? titles.房源 : []).map((_,index)=>details.房源?.[index]||{}) : demo.房源 : [];
 if (heroHouses.length) {
