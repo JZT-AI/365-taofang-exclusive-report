@@ -255,6 +255,17 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
   cursor: pointer;
 }
 .page-error { margin: 14px 0; color: #536174; text-align: center; }
+.report.is-unavailable { background: #fff; }
+.is-unavailable .hero { padding-bottom: 0; color: #17243a; background: #fff; }
+.is-unavailable .hero::before, .is-unavailable .hero::after { display: none; }
+.is-unavailable .return-button { color: #17243a; }
+.is-unavailable .hero h1, .is-unavailable .author, .is-unavailable .hero-house-summary { display: none !important; }
+.is-unavailable .content { display: flex; min-height: calc(100vh - 69px); margin-top: 0; padding: 0 24px 96px; border-radius: 0; background: #fff; align-items: center; justify-content: center; }
+.unavailable-state { max-width: 330px; text-align: center; }
+.unavailable-icon { display: grid; width: 88px; height: 88px; margin: 0 auto 28px; place-items: center; border-radius: 24px; background: #f1f5fb; color: #90a2b9; }
+.unavailable-icon svg { width: 47px; height: 47px; }
+.unavailable-state h2 { margin: 0; color: #202d42; font-size: 22px; line-height: 1.4; }
+.unavailable-state p { margin: 12px 0 0; color: #7d899b; font-size: 14px; line-height: 1.7; }
 </style>
 </head>
 <body>
@@ -277,7 +288,7 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
 <script src="../report-shared.js"></script>
 <script>
 const params = new URLSearchParams(location.search);
-if(params.get('disabled')==='1'){document.getElementById('report-content').innerHTML='<p class="page-error">该报告暂不可查看</p>';document.getElementById('report-title').textContent='报告暂不可查看';document.querySelector('.hero-house-summary')?.remove();document.querySelector('#report-advisor')?.remove();document.body.dataset.snapshotDisabled='1'}
+if(params.get('disabled')==='1')document.body.dataset.snapshotDisabled='1';
 const floors = {
   房源: { id: 'houses', title: '房源推荐' },
   图片: { id: 'images', title: '实景照片' },
@@ -643,6 +654,11 @@ const returnButton = document.querySelector('.return-button');
 if (window.opener || (document.referrer && history.length > 1)) {
   returnButton.hidden = false;
   returnButton.addEventListener('click', () => { if (window.opener) window.close(); else history.back(); });
+}
+if (document.body.dataset.snapshotDisabled === '1') {
+  document.querySelector('.report').classList.add('is-unavailable');
+  document.getElementById('report-content').innerHTML = '<div class="unavailable-state" role="status"><div class="unavailable-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M11 8h19l7 7v24a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V11a3 3 0 0 1 3-3Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M29 8v8h8M15 24h16M15 30h12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="m13 35 20-20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></div><h2>该报告暂不可查看</h2><p>这份资料目前无法查看，请返回会话查看其他内容。</p></div>';
+  document.title = '报告暂不可查看';
 }
 </script>
 </body>
