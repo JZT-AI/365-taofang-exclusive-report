@@ -167,6 +167,10 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
 }
 .recommendation[role="link"] { cursor: pointer; }
 .recommendation[role="link"]:focus-visible { outline: 2px solid #226ef3; outline-offset: 2px; }
+.recommendation.is-delisted { background: #f4f5f7; }
+.recommendation.is-delisted .cover img, .recommendation.is-delisted .card-copy { filter: grayscale(1); opacity: .66; }
+.recommendation.is-delisted .card-price, .recommendation.is-delisted .market-price strong { color: #737d8b; }
+.delisted-badge { position: absolute; z-index: 1; top: 0; left: 0; padding: 4px 7px; border-radius: 0 0 7px 0; background: #596473e8; color: #fff; font-size: 11px; font-weight: 700; }
 .detail-toast { position: fixed; z-index: 30; left: 50%; bottom: 36px; width: max-content; max-width: calc(100% - 48px); padding: 12px 17px; border-radius: 10px; background: #1a2d47e8; color: #fff; font-size: 13px; line-height: 1.45; text-align: center; transform: translateX(-50%); box-shadow: 0 10px 30px #071c3360; }
 .cover { position: relative; overflow: hidden; background: #dde6f4; }
 .recommendation .cover { aspect-ratio: 1.08; border-radius: 7px; }
@@ -301,7 +305,7 @@ const demo = {
     { ...ReportPrototype.houseExamples['101140402577'], title: '御锦城三房 · 南北通透', cover: 'thumb-living.jpg', room: 3, area: 94.06, price: 108, community: '御锦城', district: '浐灞国际港', block: '浐河西路', source: '贝壳' },
     { ...ReportPrototype.houseExamples.S4624826410476559, title: '保利心语花园 · 南北通透', cover: 'thumb-skyline.jpg', room: 3, area: 112, price: 156, community: '保利心语花园', district: '雁塔区', block: '曲江', source: '安居客' },
     { ...ReportPrototype.houseExamples['101139343423'], title: '金地湖城大境 · 四室', cover: 'thumb-video.jpg', room: 4, area: 136, price: 218, community: '金地湖城大境', district: '雁塔区', block: '曲江', source: '贝壳' },
-    { ...ReportPrototype.houseExamples.S8624826410476521, title: '龙湖香醍国际 · 三室', cover: 'thumb-community.jpg', room: 3, area: 128, price: 188, community: '龙湖香醍国际', district: '灞桥区', block: '浐灞', source: '安居客' }
+    { ...ReportPrototype.houseExamples.S8624826410476521, title: '龙湖香醍国际 · 三室', cover: 'thumb-community.jpg', room: 3, area: 128, price: 188, community: '龙湖香醍国际', district: '灞桥区', block: '浐灞', source: '安居客', status: '下架' }
   ],
   图片: [
     { title: '室内实景', cover: 'thumb-living.jpg', assetRef: 'asset-1' },
@@ -422,7 +426,8 @@ function addPropertyTags(copy, item) {
 
 function recommendation(kind, item) {
   const isHouse = kind === '房源';
-  const card = node('article', isHouse ? 'recommendation' : 'recommendation community');
+  const delisted = isHouse && ['下架', '疑似下架'].includes(item.status);
+  const card = node('article', isHouse ? 'recommendation' + (delisted ? ' is-delisted' : '') : 'recommendation community');
   const copy = node('div', 'card-copy');
   const legacyKey = isHouse && item.title.includes('|');
   const title = legacyKey ? (item.community || '房源信息') : item.title;
@@ -437,7 +442,9 @@ function recommendation(kind, item) {
     addLine(copy, 'card-meta', [item.district, item.block, item.buildingPeriod]);
     addMarketPrice(copy, item);
   }
-  card.append(buildCover(item, kind), copy);
+  const cover=buildCover(item, kind);
+  if(delisted)cover.append(node('span','delisted-badge','已下架'));
+  card.append(cover, copy);
   if (isHouse) {
     card.setAttribute('role', 'link');
     card.tabIndex = 0;
