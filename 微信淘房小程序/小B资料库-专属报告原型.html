@@ -82,7 +82,9 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
 .hero-house-summary{display:grid;gap:5px;width:fit-content;max-width:100%;margin-top:18px;padding:11px 14px;border:1px solid #ffffff3d;border-radius:12px;background:#071c6480;backdrop-filter:blur(8px)}
 .hero-house-summary span{color:#e8f1ff;font-size:13px;line-height:1.45}
 .hero-house-summary strong{color:#fff;font-size:19px;line-height:1.25;letter-spacing:.01em}
-.author { margin: 12px 0 0; color: #e0eaff; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.author { display:flex; align-items:center; gap:11px; margin: 16px 0 0; color: #e0eaff; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
+.advisor-avatar { flex:none; width:48px; height:48px; border:2px solid #ffffffb8; border-radius:50%; background:#d8e5f3 url('../有客App/customer-avatars-v2.png') left top / 300% 200% no-repeat; box-shadow:0 4px 14px #001b6866; }
+.author[hidden] { display:none; }
 .content {
   position: relative;
   margin-top: -20px;
@@ -323,7 +325,7 @@ const demoDescriptions = {
 };
 const sampleReports = {
   R001: { title: '周末看房实景照片', advisorName:'张顾问', order: ['图片'], items: { 图片: demo.图片.slice(0, 2) }, descriptions: { 图片: '整理了看房当天拍摄的室内与周边照片。' } },
-  R002: { title: '西安三房看房参考', advisorName:'王顾问', order: ['房源', '图片', '视频'], items: { 房源: demo.房源.slice(0, 2), 图片: demo.图片.slice(0, 2), 视频: demo.视频.slice(0, 1) }, descriptions: demoDescriptions },
+  R002: { title: '西安三房看房参考', advisorName:'王顾问', order: ['房源', '图片', '视频'], items: { 房源: demo.房源.slice(0, 3), 图片: demo.图片.slice(0, 4), 视频: demo.视频.slice(0, 2) }, descriptions: demoDescriptions },
   R003: { title: '周末现场讲解视频', advisorName:'张顾问', order: ['视频'], items: { 视频: demo.视频.slice(0, 2) }, descriptions: { 视频: '两段现场实拍，方便您先了解空间与周边。' } }
 };
 const sampleReport = sampleReports[params.get('sample')];
@@ -645,7 +647,7 @@ const reportTitle = sampleReport?.title || params.get('title')?.trim() || (fromR
 document.getElementById('report-title').textContent = reportTitle;
 document.title = reportTitle;
 const advisorName=sampleReport?.advisorName||params.get('advisorName')?.trim()||(!fromReport?'林悦':'');
-if(advisorName){const advisor=document.getElementById('report-advisor');advisor.textContent='安家顾问 '+advisorName+'为您整理';advisor.hidden=false}
+if(advisorName){const advisor=document.getElementById('report-advisor');advisor.replaceChildren(node('span','advisor-avatar'),node('span','', '安家顾问 '+advisorName+'为您整理'));advisor.hidden=false}
 const heroHouses = reportOrder.includes('房源') ? sampleReport ? sampleReport.items.房源 || [] : fromReport
   ? (Array.isArray(titles.房源) ? titles.房源 : []).map((_,index)=>details.房源?.[index]||{}) : demo.房源 : [];
 if (heroHouses.length) {
