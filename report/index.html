@@ -33,7 +33,7 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
 }
 .hero::before {
   inset: 0;
-  background: linear-gradient(90deg, #071a2de8 0%, #0b2339b0 52%, #0a1d3070 100%), linear-gradient(0deg, #071a2dc9, transparent 58%), url("../app/property-scenes-v1.png") right bottom / 200% 200% no-repeat;
+  background: linear-gradient(90deg, #071a2de8 0%, #0b2339b0 52%, #0a1d3070 100%), linear-gradient(0deg, #071a2dc9, transparent 58%), url("../有客App/property-scenes-v1.png") right bottom / 200% 200% no-repeat;
 }
 .hero::after {
   display:none;
@@ -76,7 +76,7 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
 .hero-icon{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;flex:none}
 .hero-icon svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .author { display:flex; align-items:center; gap:11px; margin: 16px 0 0; color: #e0eaff; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
-.advisor-avatar { flex:none; width:48px; height:48px; border:2px solid #ffffffb8; border-radius:50%; background:#d8e5f3 url('../app/customer-avatars-v2.png') left top / 300% 200% no-repeat; box-shadow:0 4px 14px #001b6866; }
+.advisor-avatar { flex:none; width:48px; height:48px; border:2px solid #ffffffb8; border-radius:50%; background:#d8e5f3 url('../有客App/customer-avatars-v2.png') left top / 300% 200% no-repeat; box-shadow:0 4px 14px #001b6866; }
 .author[hidden] { display:none; }
 .content {
   position: relative;
@@ -267,14 +267,17 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
 .unavailable-state p { margin: 12px 0 0; color: #7d899b; font-size: 14px; line-height: 1.7; }
 
 .report-share-menu{position:absolute;right:22px;top:22px;width:44px;height:36px;border:1px solid #ffffff70;border-radius:20px;background:#10243560;color:#fff;font-size:22px;cursor:pointer}
-.share-options{border:0;border-radius:18px;width:min(340px,calc(100% - 40px));padding:22px;color:#24364b}.share-options::backdrop{background:#0b192666}.share-options h3{margin:0 0 18px;font-size:18px}.share-options button{display:block;width:100%;border:1px solid #e4e9ef;background:#f7f9fc;border-radius:10px;padding:13px;margin-top:10px;color:#24364b;font-size:15px}.share-options p{font-size:13px;line-height:1.6;color:#69788c}.share-options .share-cancel{background:white;color:#788596}
-
+.share-options{position:fixed;inset:auto 0 0;margin:0 auto;border:0;border-radius:20px 20px 0 0;width:min(480px,100%);max-width:480px;max-height:90dvh;padding:0;color:#191919;background:#f7f7f7;overflow:auto}.share-options::backdrop{background:#0008}.share-app{display:flex;gap:12px;align-items:center;background:#fff;padding:22px}.share-logo{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:50%;background:#ff8b13;color:white;font-weight:800;font-style:italic}.share-app strong{display:block;font-size:17px}.share-app small{display:block;color:#999;margin-top:5px;font-size:12px}.share-recent{padding:20px 18px 16px}.share-recent h3{margin:0 0 15px;font-size:15px;font-weight:500}.share-contacts{display:flex;gap:18px;overflow:auto}.share-contact{border:0;background:none;padding:0;flex:0 0 58px;color:#777;font-size:12px;cursor:pointer}.share-avatar{display:grid;place-items:center;width:56px;height:56px;border-radius:12px;background:linear-gradient(140deg,#abc6da,#5c879e);color:#fff;font-size:22px;margin-bottom:8px}.share-contact:nth-child(2) .share-avatar{background:linear-gradient(140deg,#e8c7aa,#bc8c76)}.share-contact:nth-child(3) .share-avatar{background:#07c160}.share-contact:nth-child(4) .share-avatar{background:linear-gradient(140deg,#b7c7b0,#718c78)}.share-actions{display:flex;gap:24px;margin:0 18px;border-top:1px solid #e5e5e5;padding:22px 0 24px}.share-action{border:0;background:none;width:88px;padding:0;font-size:13px;white-space:nowrap;cursor:pointer;color:#666}.share-action-icon{display:grid;place-items:center;width:62px;height:62px;margin:0 auto 10px;border-radius:15px;background:#fff}.share-action svg{width:34px;height:34px}.share-cancel{display:block;width:100%;border:0;border-top:1px solid #e5e5e5;padding:18px 0 max(20px,env(safe-area-inset-bottom));background:#fafafa;color:#333;font-size:17px;cursor:pointer}.share-preview{padding:22px;background:#fff}.share-preview h3{margin:0 0 16px;font-size:17px}.share-card{max-width:290px;border:1px solid #e5e5e5;border-radius:10px;overflow:hidden;background:#fff;margin:auto}.share-card-title{padding:14px;font-size:16px;font-weight:600}.share-card-cover{position:relative;aspect-ratio:1;background:#e9edf0;overflow:hidden;display:flex;flex-direction:column}.share-card-cover img{width:100%;min-height:0;flex:1;object-fit:cover}.share-card-facts{padding:12px;background:#fff;color:#284653;font-size:14px;line-height:1.7}.share-card-price{font-size:20px;color:#b9472c;font-weight:700}.share-card-count{position:absolute;right:10px;bottom:10px;background:#254f44d9;color:#fff;padding:5px 9px;border-radius:5px;font-size:12px}.share-card-footer{border-top:1px solid #eee;padding:9px 12px;font-size:11px;color:#999}.share-feedback{font-size:13px;line-height:1.7;color:#77808b;margin:16px 0 0}.share-preview-back{border:0;background:none;color:#576b95;font-size:14px;padding:0;margin-bottom:18px;min-height:30px}
 </style>
 </head>
 <body>
 <div class="report">
   <header class="hero">
-    <div class="hero-top"><button class="report-share-menu" type="button" aria-label="微信分享菜单">···</button><dialog class="share-options"><h3>分享报告</h3><button data-report-share="微信会话">转发给朋友</button><button data-report-share="朋友圈">分享到朋友圈</button><p class="share-feedback" hidden></p><button class="share-cancel">取消</button></dialog><button class="return-button" type="button" aria-label="返回" hidden></button></div>
+    <div class="hero-top"><button class="report-share-menu" type="button" aria-label="微信分享菜单">···</button><dialog class="share-options" aria-label="微信小程序更多菜单">
+<section class="share-menu-body"><header class="share-app"><span class="share-logo">365</span><div><strong>365淘房 ›</strong><small>江苏三六五网络股份有限公司</small></div></header>
+<div class="share-recent"><h3>转发给</h3><div class="share-contacts"><button class="share-contact" data-report-share="微信会话"><span class="share-avatar">陈</span>陈先生</button><button class="share-contact" data-report-share="微信会话"><span class="share-avatar">林</span>林女士</button><button class="share-contact" data-report-share="微信会话"><span class="share-avatar">↪</span>文件传输助手</button><button class="share-contact" data-report-share="微信会话"><span class="share-avatar">家</span>温馨一家</button></div></div>
+<div class="share-actions"><button class="share-action" data-report-share="微信会话"><span class="share-action-icon"><svg viewBox="0 0 36 36" fill="#07c160" aria-hidden="true"><path d="M20 4 33 16 20 27v-7C10 20 6 24 3 30c0-15 6-20 17-20Z"/></svg></span>转发给朋友</button><button class="share-action" data-report-share="朋友圈"><span class="share-action-icon"><svg viewBox="0 0 36 36" aria-hidden="true"><g transform="translate(18 18)"><path d="M0-15 11-10 0 0Z" fill="#fbba20"/><path d="M11-10 15 2 0 0Z" fill="#76b640"/><path d="M15 2 8 13 0 0Z" fill="#25ad9a"/><path d="M8 13-5 15 0 0Z" fill="#258bc9"/><path d="M-5 15-15 5 0 0Z" fill="#7161a8"/><path d="M-15 5-12-9 0 0Z" fill="#dc5b81"/><path d="M-12-9 0-15 0 0Z" fill="#f28738"/><circle r="6" fill="white"/></g></svg></span>分享到朋友圈</button></div></section>
+<section class="share-preview" hidden><button class="share-preview-back">‹ 返回更多</button><h3 class="share-preview-heading"></h3><div class="share-card"><div class="share-card-title"></div><div class="share-card-cover"></div><div class="share-card-footer">◉ 小程序 · 365淘房</div></div><p class="share-feedback"></p></section><button class="share-cancel">取消</button></dialog><button class="return-button" type="button" aria-label="返回" hidden></button></div>
     <h1 id="report-title"></h1>
     <p id="report-advisor" class="author" hidden></p>
     <div id="hero-house-summary" class="hero-house-summary" hidden></div>
@@ -353,7 +356,7 @@ function node(tag, className, text) {
 function fileUrl(value) {
   if (typeof value !== 'string' || !value.trim()) return '';
   if (/^(blob:|https?:|data:)/.test(value)) return value;
-  return '../app/' + value;
+  return '../有客App/' + value;
 }
 
 function buildCover(item, kind) {
@@ -535,7 +538,7 @@ function showViewerItem(){
     content.autoplay = true;
     content.playsInline = true;
     if (url && !url.startsWith('blob:')) content.poster = url;
-    content.src = item.video || (url.startsWith('blob:') ? url : 'sample.mp4');
+    content.src = item.video || (url.startsWith('blob:') ? url : '报告视频示例.mp4');
   } else {
     if (!url) { showError(); return; }
     content.alt = item.title || '实景照片';
@@ -676,15 +679,26 @@ if (heroHouses.length) {
 const reportShareButton = document.querySelector('.report-share-menu');
 const shareDialog = document.querySelector('.share-options');
 reportShareButton.hidden = document.body.dataset.snapshotDisabled === '1';
-reportShareButton.addEventListener('click', () => {
-  shareDialog.querySelector('.share-feedback').hidden = true;
-  shareDialog.showModal();
-});
-shareDialog.querySelector('.share-cancel').addEventListener('click', () => shareDialog.close());
-shareDialog.querySelectorAll('[data-report-share]').forEach(button => button.addEventListener('click', () => {
-  const feedback = shareDialog.querySelector('.share-feedback');
-  feedback.textContent = '原型演示：正式小程序将打开' + button.dataset.reportShare + '分享，标题为「' + reportTitle + '」，封面复用报告发送卡片，打开后仍查看当前这份报告。';
-  feedback.hidden = false;
+const shareMenuBody=shareDialog.querySelector('.share-menu-body');
+const sharePreview=shareDialog.querySelector('.share-preview');
+function resetShareMenu(){shareMenuBody.hidden=false;sharePreview.hidden=true;shareDialog.querySelector('.share-cancel').textContent='取消'}
+reportShareButton.addEventListener('click',()=>{resetShareMenu();shareDialog.showModal()});
+shareDialog.querySelector('.share-cancel').addEventListener('click',()=>shareDialog.close());
+shareDialog.querySelector('.share-preview-back').addEventListener('click',resetShareMenu);
+shareDialog.addEventListener('click',event=>{if(event.target===shareDialog){const r=shareDialog.getBoundingClientRect();if(event.clientY<r.top||event.clientX<r.left||event.clientX>r.right)shareDialog.close()}});
+shareDialog.querySelectorAll('[data-report-share]').forEach(button=>button.addEventListener('click',()=>{
+  shareMenuBody.hidden=true;sharePreview.hidden=false;
+  const target=button.dataset.reportShare;
+  shareDialog.querySelector('.share-preview-heading').textContent=target==='朋友圈'?'分享到朋友圈 · 演示':'转发给朋友 · 演示';
+  shareDialog.querySelector('.share-card-title').textContent=reportTitle;
+  const cover=shareDialog.querySelector('.share-card-cover');cover.replaceChildren();
+  const shareItems=kind=>reportOrder.includes(kind)?(sampleReport?sampleReport.items[kind]||[]:fromReport?(titles[kind]||[]).map((title,i)=>({...details[kind]?.[i],cover:covers[kind]?.[i]})):demo[kind]||[]):[];
+  const houses=shareItems('房源'),photos=shareItems('图片'),videos=shareItems('视频');
+  const image=node('img');image.alt='报告分享封面';image.src=fileUrl(houses[0]?.cover||photos[0]?.cover||videos[0]?.cover||'thumb-living.jpg');cover.append(image);
+  if(houses.length){const facts=node('div','share-card-facts');const range=(key,unit)=>{const nums=houses.map(h=>Number(h[key])).filter(n=>n>0).sort((a,b)=>a-b);return nums.length?(nums[0]===nums.at(-1)?nums[0]:nums[0]+'–'+nums.at(-1))+unit:''};const rooms=[...new Set(houses.map(h=>h.room).filter(Boolean))].sort((a,b)=>a-b).map(n=>n+'室').join(' / ');facts.append(node('div','',[houses.length+'套',range('area','㎡'),rooms].filter(Boolean).join(' · ')),node('div','share-card-price',range('price','万')));cover.prepend(facts)}
+  const counts=[photos.length?'共 '+photos.length+' 张图片':'',videos.length?videos.length+' 个视频':''].filter(Boolean).join(' · ');if(counts)cover.append(node('span','share-card-count',counts));
+  shareDialog.querySelector('.share-feedback').textContent='仅为原型演示。正式功能调用微信原生分享能力，分享标题、封面与报告发送卡片一致。'+(target==='朋友圈'?'朋友圈的实际呈现由微信提供。':'接收方打开后查看同一份报告。');
+  shareDialog.querySelector('.share-cancel').textContent='知道了';
 }));
 
 const returnButton = document.querySelector('.return-button');
