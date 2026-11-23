@@ -203,8 +203,8 @@ button:focus-visible { outline: 3px solid #3782ff; outline-offset: 3px; }
   cursor: pointer;
 }
 .media-card .cover { aspect-ratio: 1.47; }
-.media-card:only-child { grid-column: 1 / -1; }
-.media-card:only-child .cover { aspect-ratio: 1.95; }
+.media-grid:not(.photo-grid) .media-card:only-child { grid-column: 1 / -1; }
+.media-grid:not(.photo-grid) .media-card:only-child .cover { aspect-ratio: 1.95; }
 .play {
   position: absolute;
   inset: 50% auto auto 50%;
@@ -557,12 +557,13 @@ function mediaTile(kind, item, items) {
 }
 
 function addMediaFloor(floor, kind, items) {
-  const initialCount = kind === '图片' ? 2 : 1;
-  const initial = node('div', 'media-grid');
+  const isPhoto = kind === '图片';
+  const initialCount = isPhoto ? (hasOtherVisibleFloor(kind) ? 2 : items.length) : 1;
+  const initial = node('div', 'media-grid' + (isPhoto ? ' photo-grid' : ''));
   initial.append(...items.slice(0, initialCount).map(item => mediaTile(kind, item, items)));
   floor.append(initial);
   if (items.length <= initialCount) return;
-  const extra = node('div', 'media-grid more-recommendations');
+  const extra = node('div', 'media-grid more-recommendations' + (isPhoto ? ' photo-grid' : ''));
   extra.id = floor.id + '-more';
   extra.hidden = true;
   extra.append(...items.slice(initialCount).map(item => mediaTile(kind, item, items)));
@@ -597,8 +598,8 @@ function floorContent(kind) {
   };
 }
 
-function hasOtherVisibleFloor() {
-  return reportOrder.some(kind => kind !== '房源' && (() => {
+function hasOtherVisibleFloor(currentKind = '房源') {
+  return reportOrder.some(kind => kind !== currentKind && (() => {
     const { visibleItems, description } = floorContent(kind);
     return visibleItems.length > 0 || !!description;
   })());
