@@ -460,7 +460,7 @@ function recommendation(kind, item) {
 }
 
 function addRecommendations(floor, kind, items) {
-  const visibleCount = 3;
+  const visibleCount = hasOtherVisibleFloor() ? 3 : items.length;
   const initial = node('div', 'recommendations');
   initial.append(...items.slice(0, visibleCount).map(item => recommendation(kind, item)));
   floor.append(initial);
@@ -581,8 +581,7 @@ function addMediaFloor(floor, kind, items) {
   floor.append(extra, toggle);
 }
 
-function renderFloor(kind) {
-  if(document.body.dataset.snapshotDisabled==='1')return;
+function floorContent(kind) {
   const media = kind === '图片' || kind === '视频';
   const items = sampleReport ? sampleReport.items[kind] || [] : fromReport
     ? (Array.isArray(titles[kind]) ? titles[kind] : []).map((title, index) => ({
@@ -592,8 +591,23 @@ function renderFloor(kind) {
         assetRef: media ? details[kind]?.[index]?.assetRef || ReportPrototype.referenceForName(String(title)) : undefined
       }))
     : demo[kind];
-  const visibleItems = media ? items.filter(item => !isMediaDisabled(item.assetRef)) : items;
-  const description = typeof descriptions[kind] === 'string' ? descriptions[kind].trim() : '';
+  return {
+    visibleItems: media ? items.filter(item => !isMediaDisabled(item.assetRef)) : items,
+    description: typeof descriptions[kind] === 'string' ? descriptions[kind].trim() : ''
+  };
+}
+
+function hasOtherVisibleFloor() {
+  return reportOrder.some(kind => kind !== '房源' && (() => {
+    const { visibleItems, description } = floorContent(kind);
+    return visibleItems.length > 0 || !!description;
+  })());
+}
+
+function renderFloor(kind) {
+  if(document.body.dataset.snapshotDisabled==='1')return;
+  const media = kind === '图片' || kind === '视频';
+  const { visibleItems, description } = floorContent(kind);
   const existing = document.getElementById(floors[kind].id);
   if (!visibleItems.length && !description) {
     existing?.remove();
@@ -630,9 +644,7 @@ ReportPrototype.onAvailabilityChange(() => {
     viewerContent.replaceChildren();
     viewer.close();
   }
-  for (const kind of reportOrder) {
-    if (kind === '图片' || kind === '视频') renderFloor(kind);
-  }
+  for (const kind of reportOrder) renderFloor(kind);
   renderEmptyState();
 });
 
